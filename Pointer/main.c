@@ -7,7 +7,7 @@ void text_1()
 
 void text_2()
 {
-    printf("nguyen luong hoang my");
+    printf("1123");
 }
 
 
