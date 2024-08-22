@@ -216,3 +216,132 @@ Pointer to Pointer được hiểu như là một biến chứa chứa địa ch
 ```
 #### NULL Pointer
 Null Pointer được hiểu như là một con trỏ không trỏ đến bất kỳ đối tượng vùng nhớ cụ thể nào. Khi ta gán cho một biến con trỏ có giá trị là NULL thì còn con trỏ đó đang trỏ tới địa chỉ 0 và địa chỉ đó có giá trị bằng 0.
+
+## Bài 4: 
+
+### Exern 
+
+- Extern là một từ khóa được sử dụng trong ngôn ngữ lập trình C. Từ khóa này được sử dụng nhằm mục đích thông báo cho chương trình biết rằng một biến hay một hàm đã được định nghĩa ở một file hay một chương trình khác rồi. Điều này giúp việc quản lý dữ liệu dữ các file một cách thuận tiện hơn và trở nên chặt chẻ hơn. Với từ khóa extern thì người dùng có thể sử dụng biến hoặc hàm đó trong một file khác.
+
+- Ví dụ 
+    - File main.c
+    ``` bash 
+    #include <stdio.h>
+
+    int value = 90;
+
+    extern void display();
+
+    int main()
+    {
+	    printf("hello\n");
+	    display();
+    }
+    ```
+    - File other.c
+    ``` bash
+    #include <stdio.h>
+
+    extern int value;
+    void display()
+    {
+	    printf("value: %d\n", value);
+    }
+    ```
+- Ứng dụng 
+    - Cho phép chúng ta chia sẻ biến và hàm giữa nhiều file nguồn trong chương trình 
+    - Dùng để kết nối các module hoặc thư viện trong một dự án lớn 
+    ...
+### Static
+#### Static local variables
+ - Khi ta khai báo từ khóa Static cho một biến cục bộ (local variables) điều này có ý nghĩa là biến đó sẽ dữ giá trị đó qua các lần gọi hàm và biến đó chỉ có thể được gọi trong hàm đó, và không thể tồn tại ngoài hàm.
+
+- Ví dụ:
+    ``` bash 
+    #include <stdio.h>
+
+    void exampleFunction() {
+        static int count = 0;  // Biến static giữ giá trị qua các lần gọi hàm
+        count++;
+        printf("Count: %d\n", count);
+    }
+
+    int main() {
+        exampleFunction();  // In ra "Count: 1"
+        exampleFunction();  // In ra "Count: 2"
+        exampleFunction();  // In ra "Count: 3"
+        return 0;
+    }
+    ``` 
+- Ứng dụng 
+    - Lưu trữ giá trh sau những lần gọi hàm nên dùng để theo dõi số lần gọi hàm mà không cần khai báo một biến toàn cục
+#### Static local variables
+Khi ta khai báo từ khóa Static cho một biến hay một hàm toàn cục, thì điều này có ý nghĩa là biến đó hay hàm đó chỉ có thể hoạt động được trong phạm vi của file nguồn hiện tại này thôi.
+- Ví dụ:
+    - File main.c
+    ``` bash
+    #include <stdio.h>
+
+    extern void display();
+    //extern int s_g_value;
+    extern int g_value;
+
+    int main()
+    {
+	    printf("hello\n");
+	    g_value = 40;
+	    display();
+	    return 0;
+    }
+    ``` 
+    - File other.c
+    ``` bash
+    #include <stdio.h>
+
+    int g_value = 30;
+    static int s_g_value = 20;
+
+
+    void display()
+    {
+	    printf("static global value: %d\n", s_g_value);
+	    printf("global value: %d\n", g_value);
+    }
+    ```
+### Volatile
+- Từ khóa Volatile trong ngôn ngữ lập trình C được sử dụng tránh việc trình biên dịch tối ưu hóa hoạt động của biến đó trong chương trình. Điều này có nghĩa là trình biên dịch sẽ hiểu là biến đó sẽ có giá trị thay đổi ngẫu nhiên, cho nên trình biên dịch sẽ không được tôi hóa bỏ qua biến đó mà phải thực hiện cập nhật giá trị của biến đó theo dúng định nghĩa ban đầu.
+
+
+### Register 
+Trong ngôn ngữ lập trình C từ khóa Register được sử dụng nhằm mục đích thông báo biến này cần được lưu trữ ở thanh ghi của máy tính, chứ không phải lưu trữ ở bộ nhớ Ram như thông thường. Việc lưu giá trị ở trên thanh ghi sẽ giúp cải thiện tốc độ tính toán dữ liệu một cách nhanh hơn so với việc lưu trữ RAM. Vì quá trình tính toán sẽ được thực hiên bô xư lý toán hoc ALU nên khi ta lưu trữ dữ liệu ở RAM thì MUC sẽ tốn thời gian truyền dữ liệu dữ RAM và thành ghi và sau đó chép dữ liệu lên ALU để tính toán. Vì vậy đối với những biến cần tối ưu hóa về mặt thời gian người ta hường lưu chúng trên bộ nhớ thanh ghi.
+
+Quá trình truyền dữ liệu có thể được mô tả như sau  
+
+![Register](/Image/2.png)
+
+- Ví dụ:
+    ``` bash
+    #include <stdio.h>
+    #include <time.h>
+
+    int main() {
+        // Lưu thời điểm bắt đầu
+        clock_t start_time = clock();
+
+        // Đoạn mã của chương trình
+        for (int i = 0; i < 1000000; ++i) {
+          // Thực hiện một số công việc bất kỳ
+        }
+
+        // Lưu thời điểm kết thúc
+        clock_t end_time = clock();
+
+        // Tính thời gian chạy bằng miligiây
+        double time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
+
+        printf("Thoi gian chay cua chuong trinh: %f giay\n", time_taken);
+
+        return 0;
+    }
+
+    ```
