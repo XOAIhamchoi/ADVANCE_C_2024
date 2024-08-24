@@ -345,3 +345,103 @@ Quá trình truyền dữ liệu có thể được mô tả như sau
     }
 
     ```
+## Bài 5:
+### Goto 
+- "goto" là một từ khóa được sử dụng trong ngôn ngữ lập trình C, nó cho phép chương trình nhảy đến một nhãn label đã được đặt trước đó và label đó chỉ được đặt trong cùng một hàm. Việc sử dụng goto mặc dù đem đến khả năng kiểm soát flow của chương trình, tuy nhiên việc sử dụng goto quá nhiều là không tốt vì nó làm cho chương trình chúng ta khó có khả năng bảo trì hơn.
+
+- Ví dụ:
+    ``` bash 
+    #include <stdio.h>
+
+    int main() {
+        int i = 0;
+        // Đặt nhãn
+        start:
+        if (i >= 5) {
+            goto end;  // Chuyển control đến nhãn "end"
+        }
+
+        printf("%d ", i);
+        i++;
+
+        goto start;  // Chuyển control đến nhãn "start"
+
+        // Nhãn "end"
+        end:
+        printf("\n");
+
+        return 0;
+    }
+    ```
+- Mặc dù goto không được khuyến khích sử dụng vì khả năng khó bảo trì của nó tuy nhiên chúng ta vẫn có thể sử dụng chúng trong một số trường hợp như sau:
+    - **Thoát khỏi nhiều cấp độ vòng lặp**
+    Trong một số trường hợp việc thoát khỏi nhiều vòng lặp trở nên phức tạp thì việc sử dụng goto để dễ dàng thoát khỏi nhiều vòng lặp hơn
+    Ví dụ:
+        ``` bash
+        for (int i = 0; i < 10; ++i) {
+            for (int j = 0; j < 10; ++j) {
+            if (some_condition(i, j)) {
+                goto exit_loops;
+                }
+            }
+        }
+        exit_loops:
+        ```
+    - **Xử lý lỗi và giải phóng bộ nhớ**   
+    Trong trường hợp sử lý lỗi, có thể sử dụng goto để dễ dàng giải phóng bộ nhớ đã được cấp pháp trước khi thoát khỏi hàm
+
+    - **Implement Finite State Machines (FSM)** (máy trạng thái hữu hạn)
+    Trong một số trường hợp, đặc biệt là khi triển khai Finite State Machines, goto có thể được sử dụng để chuyển đến các trạng thái khác nhau một cách dễ dàng.
+    Ví dụ: 
+        ```bash 
+        switch (current_state) {
+            case STATE_A:
+                // Xử lý State A
+                if (condition) {
+                    goto STATE_B;
+                }
+                break;
+
+            case STATE_B:
+                // Xử lý State B
+                break;
+        }
+
+        ```
+### setjmp.h
+- setjmp.h là một thư viện trong ngôn ngữ lập trình C, cung cấp hai hàm đó là setjmp và longjmp. Cả hai hàm này thường được sử dụng để thực hiện sử lý ngoại lệ của chương trình C. Xử lý ngoại lệ có nghĩa là ngoại lệ này vẫn khiến cho chương trình hoạt động một cách bình thường nhưng nó chính là kết quả không mong muốn của người dùng.
+- Ví dụ
+    ``` bash
+    #include <stdio.h>
+    #include <setjmp.h>
+
+    jmp_buf buffer;
+
+    void risky_function() {
+        printf("Entering risky_function\n");
+    
+        // Thiết lập điểm cho việc "quay lại"
+        if (setjmp(buffer) != 0) {
+            printf("Exiting risky_function due to longjmp\n");
+            return;
+        }
+
+        // Mô phỏng một tình huống lỗi
+        int error_condition = 1;
+        if (error_condition) {
+            printf("Error detected in risky_function\n");
+            longjmp(buffer, 1);  // "Quay lại" tới điểm đã được thiết lập bởi setjmp
+        }
+
+        printf("Exiting risky_function normally\n");
+    }
+
+    int main() {
+        printf("Starting main\n");
+        risky_function();
+        printf("Back in main after risky_function\n");
+
+        return 0;
+    }
+
+    ```
