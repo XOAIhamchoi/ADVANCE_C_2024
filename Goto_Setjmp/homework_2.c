@@ -13,9 +13,9 @@ jmp_buf buffer;
 ErrorCodes exception_code;
 char *error_message;
 #define TRY if((exception_code=setjmp(buffer))==NO_ERROR)
-#define CATCH(x) else if (exception_code == x)
-#define THROW(x,message)  error_message = message;\
-                            longjmp(buffer,x);
+#define CATCH(code) else if (exception_code == code)
+#define THROW(code,message)  error_message = message;\
+                            longjmp(buffer,code);
 
 void readFile()
 {

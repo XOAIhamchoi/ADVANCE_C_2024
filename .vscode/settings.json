@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.md": "html",
+        "stdio.h": "c",
+        "setjmp.h": "c",
+        "crtdefs.h": "c",
+        "string": "c",
+        "system_error": "c"
+    }
+}
