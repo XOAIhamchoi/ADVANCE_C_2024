@@ -445,3 +445,218 @@ Quá trình truyền dữ liệu có thể được mô tả như sau
     }
 
     ```
+## Bài 6:
+
+### Bitmask 
+- Bitmask là một kĩ thuật được sử dụng để làm việc với các bit. Nó chủ yếu được ứng dụng lưu trữ hoặc thao tác với các flag hoặc để chỉ trạng thái của chân tín hiệu nào đó. Ta có thể chỉ sửa xóa bit đó với Bitmask. Ứng dụng phổ biến của Bitmask có thể nói tới là để tối ưu hóa bộ nhớ,thực hiện các toán với bit, quyền truy cập hoặc các thuộc tính lên đối tượng,..
+#### Các toán tử bitwise
+**a. AND bitwise**
+ - Thực hiện phép AND bitwise giữa các căp bit với nhau. Kết quả bằng 1 nếu cả hai bit đều là 1, còn lại thì kết quả đều bằng 0;
+ - Ví dụ khai báo:
+    ```bash
+    int result = num1 & num2;
+    ```
+**b. OR bitwise**
+- Thực hiện phép OR bitwise giữa các căp bit với nhau. Kết quả bằng 0 nếu cả hai bit đều là 0, còn lại thì kết quả đều bằng 1;
+ - Ví dụ khai báo:
+    ```bash
+    int result = num1 | num2;
+    ```
+**c. XOR bitwise**
+- Thực hiện phép XOR bitwise giữa các căp bit với nhau. Kết quả bằng 0 nếu cả hai bit đều giống nhau(tức là cùng bằng 0 hoặc cùng bằng 1), còn lại thì kết quả đều bằng 1;
+ - Ví dụ khai báo:
+    ```bash
+    int result = num1 ^ num2;
+    ```
+**d. NOt bitwise**
+ - Đây là phép đảo từng bit của một số. Có nghĩa là 0 lấy not sẽ là 1, ngược lại 1 lấy not sẽ là 0
+ - Ví dụ khai báo:
+    ```bash
+    int result = ~num;
+    ```
+**e. Shift left or Shift right**
+ - Dùng để dịch bit sang phải hoặc sang trái 
+ - Khi ta muốn dịch các bit từ trái sang phải, ta sử dụng ký hiệu " >> " + với số phần tử muốn dịch, sau khi địch các tùy vào số phần tử muốn dịch mà ta phải thêm bấy nhiêu số bit 0 or bit 1 (xét bit 0 or 1 phải giựa vào giá trị đó có phải là số có dấu hay không or hoặc quy định bởi bit MSB);
+ - Ví vụ:
+    ```bash
+    int resultLeftShift = num >> shiftAmount;
+    \\ giả sử ban đầu  num =0b00011110;
+    \\ nếu dịch 3 phần từ, tức là shiftAmount =3;
+    \\ kết quả dich sang phải 0b00000011;
+    ```
+ - Khi ta muốn dịch các bit từ phải sang trái, ta sử dụng ký hiệu " << " + với số phần tử muốn dịch, sau khi địch các tùy vào số phần tử muốn dịch mà ta phải thêm bấy nhiêu số bit 0;
+ - Ví vụ:
+    ```bash
+    int resultLeftShift = num << shiftAmount;
+    \\ giả sử ban đầu  num =0b00011110;
+    \\ nếu dịch 3 phần từ, tức là shiftAmount =3;
+    \\ kết quả dich sang trái 0b11110000;
+    ```
+
+#### Một số ví dụ về ứng dụng của BITMASK
+- example 1:
+```bash
+#include <stdio.h>
+#include <stdint.h>
+
+#define GENDER        1 << 0  // Bit 0: Giới tính (0 = Nữ, 1 = Nam)
+#define TSHIRT        1 << 1  // Bit 1: Áo thun (0 = Không, 1 = Có)
+#define HAT           1 << 2  // Bit 2: Nón (0 = Không, 1 = Có)
+#define SHOES         1 << 3  // Bit 3: Giày (0 = Không, 1 = Có)
+// Tự thêm 5 tính năng khác
+#define FEATURE1      1 << 4  // Bit 4: Tính năng 1
+#define FEATURE2      1 << 5  // Bit 5: Tính năng 2
+#define FEATURE3      1 << 6  // Bit 6: Tính năng 3
+#define FEATURE4      1 << 7  // Bit 7: Tính năng 4
+
+void enableFeature(uint8_t *features, uint8_t feature) {
+    *features |= feature;
+}
+
+void disableFeature(uint8_t *features, uint8_t feature) {
+    *features &= ~feature;
+}
+
+
+int isFeatureEnabled(uint8_t features, uint8_t feature) {
+    return (features & feature) != 0;
+}
+
+void listSelectedFeatures(uint8_t features) {
+    printf("Selected Features:\n");
+
+    if (features & GENDER) {
+        printf("- Gender\n");
+    }
+    if (features & TSHIRT) {
+        printf("- T-Shirt\n");
+    }
+    if (features & HAT) {
+        printf("- Hat\n");
+    }
+    if (features & SHOES) {
+        printf("- Shoes\n");
+    }
+    // Thêm các điều kiện kiểm tra cho các tính năng khác
+}
+
+void removeFeatures(uint8_t *features, uint8_t unwantedFeatures) {
+    *features &= ~unwantedFeatures;
+}
+
+
+
+int main() {
+    uint8_t options = 0;
+    // Thêm tính năng 
+    enableFeature(&options, GENDER | TSHIRT | HAT);
+
+    removeFeatures(&options, TSHIRT);
+
+    // Liệt kê các tính năng đã chọn
+    listSelectedFeatures(options);
+    
+    return 0;
+}
+```
+- example 2:
+``` bash
+#include <stdio.h>
+
+#define LED1 1 << 0 // 0001
+#define LED2 1 << 1 // 0010
+#define LED3 1 << 2 // 0100
+#define LED4 1 << 3 // 1000
+
+
+void enableLED(unsigned int *GPIO_PORT, unsigned int LED) {
+    *GPIO_PORT |= LED;
+}
+
+void disableLED(unsigned int *GPIO_PORT, unsigned int LED) {
+    *GPIO_PORT &= ~LED;
+}
+
+
+int main() {
+    unsigned int GPIO_PORT = 0; // Giả sử là biến điều khiển cổng GPIO
+
+    // Bật LED1 và LED3
+    enableLED(&GPIO_PORT, LED1 | LED3);
+    if (GPIO_PORT & LED1 )
+    {
+        printf("LED1 is on\n");
+    }
+
+    if (GPIO_PORT & LED2)
+    {
+        printf("LED2 is on\n");
+    }
+
+    if (GPIO_PORT & LED3)
+    {
+        printf("LED3 is on\n");
+    }
+  
+    // Tắt LED1 và bật LED2
+    disableLED(&GPIO_PORT, LED1);
+    enableLED(&GPIO_PORT, LED2);
+
+    if (GPIO_PORT & LED1 )
+    {
+        printf("LED1 is on\n");
+    }
+
+    if (GPIO_PORT & LED2)
+    {
+        printf("LED2 is on\n");
+    }
+
+    if (GPIO_PORT & LED3)
+    {
+        printf("LED3 is on\n");
+    }
+
+    // Cập nhật trạng thái của GPIO_PORT tương ứng với hardware
+
+    return 0;
+}
+
+```
+- example 3:
+```bash
+#include <stdio.h>
+#include <stdint.h>
+
+#define ENABLE 1
+#define DISABLE 0
+
+typedef struct {
+    uint8_t LED1 : 1;
+    uint8_t LED2 : 1;
+    uint8_t LED3 : 1;
+    uint8_t LED4 : 1;
+    uint8_t LED5 : 1;
+    uint8_t LED6 : 1;
+    uint8_t LED7 : 1;
+    uint8_t LED8 : 1;
+} LEDStatus;
+
+
+
+int main() {
+    LEDStatus ledStatus = {.LED7 = ENABLE};
+    // Bật LED 1 và 3
+    ledStatus.LED1 = ENABLE;
+    ledStatus.LED3 = ENABLE;
+
+    // Kiểm tra trạng thái của LED 1
+    if (ledStatus.LED1) {
+        printf("LED1 is on\n");
+    }
+
+
+    return 0;
+}
+```
+
