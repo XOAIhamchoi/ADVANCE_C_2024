@@ -1,4 +1,6 @@
-## Bài 1:
+## Bài 1: COMPILER-MACRO
+<details><summary>Chi tiết</summary>
+
 ### Compiler
 - Compiler là một phần mềm để biên dịch một hay nhiều chương trình được viết từ ngôn ngữ bậc cao(ngôn ngữ C, C++, python,..) sang ngôn ngữ bậc thấp (thường là ngôn ngữ nhị phân) để nạp cho MCU hoặc máy tính. Hay nói cách khác compiler giống như một thông dịch viên giữa người lập trình và máy tính hoặc MCU.
 ### Compiler Process 
@@ -64,7 +66,11 @@ MACRO chia thành 3 nhóm chính:
 
 **Variadic macros**
 macro variadic được sử dụng để định nghĩa ra hàm khi ta không xác định được chính xác input đầu vào. Khi đó ta có #define func(...) dấu 3 chấm sẽ được định nghĩa thành __VA_ARGS__
-## Bài 2:
+</details>
+
+## Bài 2: STDARG-ASSERT LIBRARY
+
+<details><summary>Chi tiết</summary>
 
 ### Thư viện stdarg.h
 - Cung cấp các phương thức để làm việc với các hàm có số lượng input 
@@ -109,7 +115,11 @@ parameter không cố định.
  - Thư viện cung cấp 1 macro assert kiểm tra một điều kiện luôn luôn đúng. Nếu sai thì chương trình sẽ dừng và báo lỗi.
  
     - Cú pháp: `assert(biểu_thức);`
-## Bài 3:
+
+</details>
+
+## Bài 3: POINTER
+<details><summary>Chi tiết</summary>
 
 ### Pointer
 
@@ -216,8 +226,10 @@ Pointer to Pointer được hiểu như là một biến chứa chứa địa ch
 ```
 #### NULL Pointer
 Null Pointer được hiểu như là một con trỏ không trỏ đến bất kỳ đối tượng vùng nhớ cụ thể nào. Khi ta gán cho một biến con trỏ có giá trị là NULL thì còn con trỏ đó đang trỏ tới địa chỉ 0 và địa chỉ đó có giá trị bằng 0.
+</details>
 
-## Bài 4: 
+## Bài 4: EXTERN-STATIC-VOLATILE-REGISTER
+<details><summary>Chi tiết</summary>
 
 ### Exern 
 
@@ -345,7 +357,11 @@ Quá trình truyền dữ liệu có thể được mô tả như sau
     }
 
     ```
-## Bài 5:
+</details>
+
+## Bài 5: GOTO-SETJMP
+<details><summary>Chi tiết</summary>
+
 ### Goto 
 - "goto" là một từ khóa được sử dụng trong ngôn ngữ lập trình C, nó cho phép chương trình nhảy đến một nhãn label đã được đặt trước đó và label đó chỉ được đặt trong cùng một hàm. Việc sử dụng goto mặc dù đem đến khả năng kiểm soát flow của chương trình, tuy nhiên việc sử dụng goto quá nhiều là không tốt vì nó làm cho chương trình chúng ta khó có khả năng bảo trì hơn.
 
@@ -445,7 +461,10 @@ Quá trình truyền dữ liệu có thể được mô tả như sau
     }
 
     ```
-## Bài 6:
+</details>
+
+## Bài 6: BITMASK
+<details><summary>Chi tiết</summary>
 
 ### Bitmask 
 - Bitmask là một kĩ thuật được sử dụng để làm việc với các bit. Nó chủ yếu được ứng dụng lưu trữ hoặc thao tác với các flag hoặc để chỉ trạng thái của chân tín hiệu nào đó. Ta có thể chỉ sửa xóa bit đó với Bitmask. Ứng dụng phổ biến của Bitmask có thể nói tới là để tối ưu hóa bộ nhớ,thực hiện các toán với bit, quyền truy cập hoặc các thuộc tính lên đối tượng,..
@@ -660,3 +679,145 @@ int main() {
 }
 ```
 
+</details>
+
+## Bài 7:
+
+<details><summary>Chi tiết</summary>
+
+
+### Struct
+- Struct được hiểu như là một kiểu dữ liệu có cấu trúc nó phép các lập trình viên định nghĩa ra nhiều biến có nhiều kiểu dữ liệu khác nhau ở trong đó. mỗi member trong một struct thì sẽ có một vùng nhớ lưu trữ riêng.
+
+- Ví dụ 
+  - **Sử dụng Struct**
+    ``` bash
+    struct Point {
+        int x;
+        int y;
+    };
+    void printPoint(struct Point p);
+
+    void updatePoint(struct Point* p, int newX, int newY);
+
+    int main()
+    {
+        // Để khởi tạo một biến thuộc kiểu struct, bạn sử dụng cú pháp như sau:
+        struct Point p1 = {10, 20};
+        // Để truy cập các thành viên, bạn sử dụng toán tử ( . ):
+        printf("X coordinate: %d\n", p1.x);
+    }
+
+    //Bạn có thể truyền một biến thuộc kiểu struct như một tham số cho một hàm.
+
+    void printPoint(struct Point p) {
+    printf("(%d, %d)\n", p.x, p.y);
+
+    //Bạn có thể truyền con trỏ đến struct như một tham số cho một hàm, cho phép thay đổi giá trị của struct bên trong hàm.
+        void updatePoint(struct Point* p, int newX, int     newY) {
+        p->x = newX;
+        p->y = newY;
+        }
+
+    }
+    ```
+  - **Sử dụng từ khóa typedef thêm tên cho struct để rút gọn cú pháp khai báo biến:**
+    
+    ``` bash
+    typedef struct {
+        char name[50];
+        double maxSpeed;
+        double maxAccel;
+    int seats;
+    } Car;
+
+    Car myCar = {.name = "Honda", .maxSpeed = 200.0, .maxAccel = 500.0, .seats = 4};
+    ```
+- Cách sắp xếp vùng nhớ của Struct 
+    Việc hiểu rõ về việc cách sắp xếp vùng nhớ của struct rất quan trọng, nó giúp chúng ta giảm đi kích thước của bộ nhớ. Điều này là rất quan trọng trong khi làm việc với các project về tối ưu hóa bộ nhớ chương trình.
+    
+    Khi ta định nghĩa một kiểu dữ liệu struct, thì lập tức máy tính sẽ cấp một địa chỉ để lưu trữ Struct đó. Và kích của Struct nó phụ thuộc vào biến có kích thước lớn nhất. 
+
+    ![Register](/Image/3.png)
+
+    ``` bash
+    //ban đầu biền a chiếm 1 byte và dư 3 padding 
+    //biến b có kiểu dữ liệu 4 byte thì nó lấp đầy và không dư padding nào.
+    //biến c có kiểu dữ liệu 2 byte thì lấp đầy 2 ô và dư 2 padding.
+    //tính tống số ô nhớ struct này  1 2byte trong đó có 7 byte để chứa data 5 padding 
+    ```
+- Ứng dụng nhiều trong việc xử lý json và list. Bên cạnh đó còn ứng dụng vào viết diver library trong nhúng ví dụ cấu hình các chức năng của protocol truyền dữ liệu SPI, I2C,...
+### Union 
+- Union cũng là một kiểu dữ liệu có cấu trúc nó cho phép các lập trình viên định nghĩa nhiều biến có các kiểu dữ liệu khác nha. Tuy nhiên, các member trong union đều sử dụng chung một vung nhớ ( tức là có cùng địa chỉ) và kích thức của một biến có kiểu dữ union phụ thuộc biến Mentor có kích thước lớn nhất.
+- Ví dụ
+
+``` bash 
+typedef union {
+    uint8_t member_1;
+    uint16_t member_2;
+    uint32_t member_3;
+} union_1;
+
+union_1 myUnion;
+myUnion.member_3 = 1048574; // các member trong myUnion để có chung 1 vùng địa chỉ nên ta chỉ cần gán giá trị cho bất kỳ member nào thì đều được giá trị như vậy
+
+// kết quả 
+/*
+member_3 = 1048574 // cho kết đúng với giá trị đã nhập vào ban đầu vì nó có kiểu 4 byte 
+member_2 = 65534 // kết quả sai do member_2 chỉ có 16bit vì vậy nó sẽ chữa được 2byte từ giá trị 1048574 và nó lấy từ LSB 
+member_1 = 254 // kết quả sai do member_1 có 1 byte nên nó chỉ chứa 1byte tính từ LSB của giá trị 
+*/
+
+```
+- **Lưu ý kích thước của một kiểu dữ liệu Union là biến được định nghĩa bên trong Union**
+
+
+### Kết hợp giữa Union và Struct 
+
+``` bash
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+
+// union lồng struct
+typedef union {
+    struct {
+        uint8_t id[2];  // 2byte 
+        uint8_t data[4]; // 4byte 
+        uint8_t check_sum[2]; // 2byte 
+    } data; // thiết kể không có padding 
+    // union có 2 biến data và frame và mỗi biến đều cùng vùng địa chỉ và địa chỉ lưu 8byte dữ liệu 
+    uint8_t frame[8]; 
+
+} Data_Frame;
+
+
+int main(int argc, char const *argv[])
+{
+
+    // ứng dụng trong việc truyền nhận dữ liệu 
+    Data_Frame transmitter_data;
+    
+    strcpy(transmitter_data.data.id, "10");
+    strcpy(transmitter_data.data.data, "1234");
+    strcpy(transmitter_data.data.check_sum, "70");
+
+	Data_Frame receiver_data;
+    strcpy(receiver_data.frame, transmitter_data.frame);
+	
+    
+    return 0;
+}
+
+```
+
+</details>
+
+
+
+
+
+
+
+
+    
