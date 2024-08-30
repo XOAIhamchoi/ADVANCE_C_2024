@@ -681,7 +681,7 @@ int main() {
 
 </details>
 
-## Bài 7:
+## Bài 7: STRUCT-UNION
 
 <details><summary>Chi tiết</summary>
 
