@@ -813,7 +813,242 @@ int main(int argc, char const *argv[])
 
 </details>
 
+## Bài 8: MEMORY LAYOUT
 
+<details><summary>Chi tiết</summary>
+
+- Sau khi compiler biên dịch ra các file. hex hoặc executable file thì sẽ được lưu ở bộ nhớ Flash của MCU hoặc SSD đối với máy tính. Khi ta bắt đầu chạy một chương trình thì executable file sẽ được coppy vào bộ nhớ RAM để thực thi.
+            ![Memory layout](/Image/4.png)
+
+Khi coppy vào RAM, thì chương trình được sắp xếp theo từng vùng nhớ. Phân vùng nhớ của một chương trình C/C++ gồm 5 phần:
+
+### TEXT SEGMENT
+Phân vung TEXT là vùng nhớ có địa chỉ thấp nhất. Phân vùng text chỉ có thể đọc ra và không thể ghi bất kỳ thứ gì vào phân vung này (READ ONLY)
+
+- Chứa các lệnh thực thi của chương trình 
+- chứa các biến hằng số và con trỏ kiểu char
+``` bash
+#include <stdio.h>
+
+const int a = 10;
+char arr[] = "Hello";
+char *arr1 = "Hello";
+
+int main() {
+   
+
+    printf("a: %d\n", a);
+
+    arr[3] = 'W';
+    printf("arr: %s", arr);// arr là một mảng nên nó có thể thay đổi được giá trị do không phải phân vùng text
+
+    // arr1[3] = 'E';
+    printf("arr1: %s", arr1); // do arr1 là một con trỏ kiểu char nên không thể thay đổi giá trị do nó nằm ở phân vùng text
+
+    
+    return 0;
+}
+```
+
+### Data segment
+Initialized Data Segment (Dữ liệu Đã Khởi Tạo): là phân vùng lưu global variables, static variables được khởi tạo với giá trị khác 0.
+- Chứa các biến toàn cục được khởi tạo với giá trị khác 0
+- Chứa các biến static được khởi tạo với giá trị khác 0.
+- cho phép đọc và ghi dữ liệu, tức là dữ liệu có thể thay đổi
+- Tất cả các biến sẽ bị thu hồi vùng nhớ khi chương trình kết thúc.
+``` bash
+#include <stdio.h>
+
+int a = 10; // data khác 0 nên lưu phân  vùng DS
+double d = 20.5; // data khác 0 nên lưu phân  vùng DS
+
+static int var = 5; // data khác 0 nên lưu phân  vùng DS
+
+void test()
+{
+    static int local = 10; // data khác 0 nên lưu phân  vùng DS
+}
+
+
+int main(int argc, char const *argv[])
+{  
+    a = 15; // thay đổi được giá trị 
+    d = 25.7; // thay dổi được giá trị 
+    var = 12;// thay dổi được giá trị
+    printf("a: %d\n", a); // in ra giá trị hiện tại
+    printf("d: %f\n", d);
+    printf("var: %d\n", var);
+
+
+
+    return 0;
+}
+```
+### Bss segment (Block started by symbol)
+Uninitialized Data Segment (Dữ liệu Chưa Khởi Tạo):là phân vùng lưu global variables, static variables không được khởi tạo giá trị hoặc được khởi tạo với giá trị là 0.
+- cho phép đọc và ghi tại phân vùng này
+- Tất cả các biến trong phân vùng này sẽ bị thu hồi sau khi kết thúc chương trình 
+``` bash
+#include <stdio.h>
+
+
+typedef struct 
+{
+    int x;
+    int y;
+} Point_Data; // chưa khởi tạo giá trị nên lưu ở phân vùng BSS
+
+
+int a = 0; // khởi tạo giá trị bằng 0 nên lưu BSS
+int b; // chưa khởi tao giá trị nên lưu BSS
+
+static int global = 0; // tương tư
+static int global_2;// 
+
+static Point_Data p1 = {5,7}; // ban đầu chưa khởi tao nên lưu BSS, sau đó khởi tạo giá trị thì biến đó vẫn lưu ở BSS
+
+
+
+void test()
+{
+    static int local = 0;
+    static int local_2;
+}
+
+int main() {
+
+    
+    printf("a: %d\n", a);
+    printf("global: %d\n", global);
+   
+
+    
+    
+    return 0;
+}
+
+```
+### Stack
+Stack là phân vùng nhớ được cấp pháp tự động trong quá trình thực thi chương trình, hoạt động theo cấu trúc LIFO (Last In First Out).Vùng nhớ stack chứa các biến cục bộ, tham số truyền vào của hàm khi được gọi.
+- Có thể thực hiện đọc và ghi giá trị trong suốt thời gian gọi hàm.
+- Vùng nhớ sẽ bị thu hồi khi thoát ra khỏi hàm đó
+``` bash 
+#include <stdio.h>
+
+
+void test()
+{
+    int test = 0;
+    test = 5;
+    printf("test: %d\n",test);
+}
+
+int sum(int a, int b)
+{
+    int c = a + b;
+    printf("sum: %d\n",c);
+    return c;
+}
+
+
+
+int main() {
+
+    sum(3,5);
+    /*
+        0x01 // khi goi hàm 0x01 chưa tham số truyền vào 3
+        0x02 // // khi goi hàm 0x02 chưa tham số truyền vào 5
+        0x03 // khi goi hàm 0x03 chưa tham số phép cộng 8
+        // giả xử 0x01 0x02 0x03 là 3 điaj chỉ của phân vùng stack 
+    */
+   test();
+   /*
+    int test = 0; // 0x01
+   */
+
+
+    
+    return 0;
+}
+
+```
+### Heap
+Heap là vùng nhớ lưu các biến được cấp phát động trong quá trình thực thi chương trình. Khi không còn sử dụng vùng nhớ đã được cấp pháp trên heap thì phải giải phóng vùng nhớ đó. Nếu không giải  phóng có thể dẫn tới mất dữ liệu (memory leak) do không còn vùng nhớ để lưu.
+
+Sử dụng các hàm alloc, realloc, free, delete,… từ thư viện stdlib.h để cấp phát bộ nhớ trên vùng heap.
+
+Vậy câu hỏi đặt ra là tại sao phải sử dụng head ? Ví dụ chúng ta muốn nhập trên một người từ bàn phím sau đó. Nếu chúng ta sử dụng phương pháp bình thường là mảng để chứa dữ liệu thì có thể gây dư vùng nhớ. Sẽ không tối ưu khi không biết chắc chắn kích thước size của mảng là bao nhiêu. Vì vậy giải pháp tối ưu hơn là sử dụng cấp pháp động 
+
+Để cấp phát động với ta có thể sử dụng cú pháp như sau.
+```bash
+int *ptr = (int *)malloc(sizeof(int) * 10); // Cấp phát bộ nhớ cho 10 số nguyên
+// hiểu đơn giản đoan code này tham số truyền vào hàm malloc là size, 
+nghĩa là số byte ta muốn cấp phát, ví dụ này là 40byte
+// kết quả trả về của hàm malloc là một con trỏ kiểu void
+// vậy nên để truy cập đến giá trị được cấp phát của hàm đó phải ép kiểu
+// trường hợp này ép kiểu về kiểu int
+
+
+```
+ví dụ khác 
+``` bash
+// Cấp phát vùng nhớ trên heap và sửa dụng vùng nhớ đó.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void function_1() {
+    int size = sizeof(int)*10;
+    int *list_num = (int *)malloc(size); // bản châts nó đang trỏ tới địa chỉ đầu tiên trong 10 phần tử được khởi tạo
+
+    printf("Malloc size: %d byte.\n", size);
+
+    for(int index=0;index<10;index++) {
+        list_num[index] = index;
+    }
+
+    for(int index=0;index<10;index++) {
+        // printf("Address: 0x%p, Value: %d.\n", &list_num[index], list_num[index]);
+        printf("Address: 0x%p, Value: %d.\n", list_num+index, *(list_num+index));// xuất ra địa chỉ là giá trị của từng ô địa chỉ đó
+    }
+    
+    free(list_num);
+}
+
+int main(void) {
+
+    function_1();
+    return 0;
+}
+```
+
+- **lưa ý**
+
+Một biến constant local có thể thay đổi thay đổi được giá trị của nó thông qua một con trỏ đến địa chỉ của nó, vì biến constant local đó được lưu trên stack. Tuy nhiên khi biên dịch thì compiler sẽ cảnh báo.
+
+Một biến constant global thì không có cách nào thay đổi được giá trị vì nó nằm trên phân vùng text.
+### SỰ KHÁC NHAU GIỮA STACK và HEAP SEGMENT
+- đều cho phép đọc và ghi dữ liệu
+- Stack để lưu trữ các biến cục bộ và tham số truyền vào khi gọi hàm, việc cấp phát vùng nhớ là do chương trình tự quản lý và cơ chế tự thu hồi vùng nhớ.
+- Cả hai vùng nhớ này đều có thể xảy ra memory leak khi sử dụng stack ta tạo một lượng biến cục bộ quá lớn dẫn đến over stack. Còn với heap khi ta cấp phát vùng nhớ mà chưa thu hồi cũng sẽ gây ra over heap . Stack và Heap sẽ ảnh dữ liệu lẫn nhau.
+
+### Malloc và calloc
+Malloc và calloc vùng để cấp phát một vùng nhớ trên heap
+Tuy nhiên, chúng cả 2 hàm này vẫn có sự khác biệt 
+- malloc:
+    - Sẽ cấp phát một vùng nhớ mà không khởi tạo giá trị cho các ô nhớ đó. Tức là giá trị của vùng nhớ đó vẫn sẽ giữ nguyên như trước khi cấp phát vùng nhớ. Các giá trị ngẫu nhiên này gọi là garbage values
+    - malloc chỉ cần một tham số truyền vào là số byte bộ nhớ sẽ cấp phát.
+    ``` bash 
+     char *line = (char *)malloc(20 * sizeof(char));
+    ```
+- calloc:
+    - Sẽ cấp phát một vùng nhớ và khởi tạo giá trị 0 cho các ô nhớ.
+    - calloc có hai giá trị truyền vào là số phần tử cần cấp phát và kích thước (số byte) của mỗi phần tử.
+
+    ``` bash
+     char *line = (char *)calloc(20, sizeof(char));
+    ```
+</details>
 
 
 
