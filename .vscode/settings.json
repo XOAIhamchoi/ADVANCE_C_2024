@@ -5,6 +5,7 @@
         "setjmp.h": "c",
         "crtdefs.h": "c",
         "string": "c",
-        "system_error": "c"
+        "system_error": "c",
+        "algorithm": "c"
     }
 }

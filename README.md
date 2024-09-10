@@ -1050,8 +1050,21 @@ Tuy nhiên, chúng cả 2 hàm này vẫn có sự khác biệt
     ```
 </details>
 
+## Bài  9: LINKED LIST 
 
+- Linked list (danh sách liên kết) là một cấu trúc dữ liệu động. Một linked list bao gồm nhiều notes được liên kết lại với nhau thông qua next. Khi làm việc với note ta cần quan tâm tới 3 thông số: 1 là địa chỉ của note đó(address), 2 là giá trị mà note đó lưu trữ (value), 3 là next, nó chứa địa chỉ của
+- Expand, đối với singly linked list thì sẽ có 1 next element và nó trỏ tới địa chỉ của note tiếp theo. Also, đối với double linked list thì sẽ có 2 next element và nó trỏ tới địa của note tiếp theo và địa chỉ của note trước đó.
+- Để define ra một note trong C la thực hiện như sau:
+    ```bash
+    typedef struct node
+    {
+    int value; // đây là phần data 
+    struct node *next; // đây là con trỏ dùng để trỏ tới node tiếp theo 
+    } node_t;
+    ```
 
+### Ưu Nhược điểm của linked list
+- Một listed list cung cấp một cách linh hoạt thêm xóa và chèn các phần tử mà không cần thêm xóa các phần mà không cần phải dịch hay di chuyển các phần tử như mảng. Tuy nhiên, nó cũng có nhược điểm là nó phải trỏ đến các địa chỉ tiếp của note tiếp theo nên nó tăng độ phức tạp của bộ nhớ dẫn đến giảm hiệu xuất so với mảng 
 
 
 
