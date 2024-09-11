@@ -6,6 +6,7 @@
         "crtdefs.h": "c",
         "string": "c",
         "system_error": "c",
-        "algorithm": "c"
+        "algorithm": "c",
+        "stdlib.h": "c"
     }
 }

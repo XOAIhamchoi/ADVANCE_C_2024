@@ -1052,6 +1052,8 @@ Tuy nhiên, chúng cả 2 hàm này vẫn có sự khác biệt
 
 ## Bài  9: LINKED LIST 
 
+<details><summary>Chi tiết</summary>
+
 - Linked list (danh sách liên kết) là một cấu trúc dữ liệu động. Một linked list bao gồm nhiều notes được liên kết lại với nhau thông qua next. Khi làm việc với note ta cần quan tâm tới 3 thông số: 1 là địa chỉ của note đó(address), 2 là giá trị mà note đó lưu trữ (value), 3 là next, nó chứa địa chỉ của
 - Expand, đối với singly linked list thì sẽ có 1 next element và nó trỏ tới địa chỉ của note tiếp theo. Also, đối với double linked list thì sẽ có 2 next element và nó trỏ tới địa của note tiếp theo và địa chỉ của note trước đó.
 - Để define ra một note trong C la thực hiện như sau:
@@ -1066,6 +1068,56 @@ Tuy nhiên, chúng cả 2 hàm này vẫn có sự khác biệt
 ### Ưu Nhược điểm của linked list
 - Một listed list cung cấp một cách linh hoạt thêm xóa và chèn các phần tử mà không cần thêm xóa các phần mà không cần phải dịch hay di chuyển các phần tử như mảng. Tuy nhiên, nó cũng có nhược điểm là nó phải trỏ đến các địa chỉ tiếp của note tiếp theo nên nó tăng độ phức tạp của bộ nhớ dẫn đến giảm hiệu xuất so với mảng 
 
+</details>
 
 
-    
+ ## Bài  10: STACK AND QUEUE
+ 
+<details><summary>Chi tiết</summary>   
+
+### STACK
+- Stack (ngăn xếp) là một cấu trúc dữ liệu tuân thử theo nguyên tắc "LAST IN FIRST OUT", nghĩa là phần tử được thêm vào stack cuối cùng sẽ được lấy ra khỏi stack đầu tiên.
+![STACK](/Image/5.png)
+
+- Các thao tác cơ bản trên stack bao gồm:
+    - "push" để thêm một phần tử vào đỉnh của stack
+    - "pop" để xóa một phần tử ở đỉnh stack.
+    - “top” để lấy giá trị của phần tử ở đỉnh stack.
+
+
+- Để định nghĩa một Stack ta sử dụng struct 
+
+``` bash
+typedef struct Stack {
+    int* items; // con trỏ trỏ tơi địa chỉ của các phần tử trong stack 
+    int size; // kich thước stack 
+    int top; // chỉ số tại đỉnh của stack
+} Stack;
+```
+
+### QUEUE
+
+- Queue (hàng đợi) là một cấu trúc dữ liệu tuân thủ theo nguyên tắc "First in First out" FIFO, tức là phần tử vào Queue đầu tiên thì sẽ ra khỏi queue đầu tiên. 
+
+![QUEUE](/Image/6.png)
+
+**AFTER**
+
+![QUEUE AFTER](/Image/7.png)
+
+- Các thao tác cơ bản trên hàng đợi bao gồm:
+    - “enqueue” (thêm phần tử vào cuối hàng đợi)
+    - “dequeue” (lấy phần tử từ đầu hàng đợi). 
+    - “front” để lấy giá trị của phần tử đứng đầu hàng đợi
+
+- Để định nghĩa một Queue ta sử dụng struct 
+``` bash
+typedef struct queue
+{
+    int *items; // con trỏ này sẽ trỏ đến địa chỉ của queue
+    int size; // kích thước queue
+    int rear, front; // rear cuối hàng đợi, front là đầu hàng chờ;
+}queue_t;
+
+```
+</details>
