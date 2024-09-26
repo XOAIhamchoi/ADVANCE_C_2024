@@ -1099,6 +1099,8 @@ typedef struct Stack {
 
 - Queue (hàng đợi) là một cấu trúc dữ liệu tuân thủ theo nguyên tắc "First in First out" FIFO, tức là phần tử vào Queue đầu tiên thì sẽ ra khỏi queue đầu tiên. 
 
+**BEFORE**
+
 ![QUEUE](/Image/6.png)
 
 **AFTER**
@@ -1121,3 +1123,201 @@ typedef struct queue
 
 ```
 </details>
+
+
+ ## Bài  11: JSON 
+
+<details><summary>Chi tiết</summary>   
+
+Json viết tắt là JavaScript Object Notation. Đây là một định dạng truyền tải dữ liệu được ứng dụng phổ biến trong lập trình. Ta có thể bắt gặp nó khi giao tiếp giữa các thiết bị với một cơ sở dữ liệu trên Website,...
+
+JSON có được cấu tạo từ nhiều cặp Key - Value. 1 cặp Key và Value thì có thể được hiểu đây chính là một đối tượng (Object)
+
+For example như sau:
+``` bash
+    [
+    {
+        "name": "John Doe",
+        "age": 30,
+        "city": "New York",
+        "occupation": "Software Engineer",
+        "isStudent": false
+    }, // Object cách nhau dấu ","
+    {
+        "name": "Jane Smith",
+        "age": null,
+        "city": "Los Angeles",
+        "contact": {
+        "email": "jane.smith@example.com",
+        "phone": "555-1234"
+        }
+    },
+    {
+        "name": "Bob Johnson",
+        "age": 35,
+        "city": "Chicago"
+    }
+    ]
+    // Sử dụng Json dùng để quản lý thông tin người dùng,
+    // dữ liệu thuộc nhiều kiểu khác nhau, 
+    // và lượng thông tin của một đối tượng không có định
+    // trong 1 object có thể là các thành phần thông tin có thể là nhiều kiểu dữ liệu khcs nhau
+    // nó có thể value, string, array, thậm chi có thể object, or bool_value,...
+```
+
+Phân Tách Chuỗi Json
+
+Đầu tiên ta phải định nghĩa ra 1 danh sách kiểu dữ liệu JSON sẽ có 
+``` bash 
+typedef enum{
+    JSON_NULL,
+    JSON_BOOLEAN,
+    JSON_NUMBER,
+    JSON_STRING,
+    JSON_ARRAY,
+    JSON_OBJECT,
+}JsonType;
+```
+Định nghĩa ra 1 JsonValue gồm type và value. Vì vậy ta dung Struct tạo ra 2 member. 
+``` bash 
+typedef struct JsonValue
+{
+    JsonType type;// type có kiểu dữ liệu đã được định nghĩa ở trên 
+    union
+    {
+        int boolean;
+        double number;
+        char *string;
+        struct {
+            struct JsonValue *values;
+            size_t count;
+        } array; // nếu là mảng => dùng 1 con trỏ trỏ tới địa chỉ đầu tiên mảng, 
+        // 1 biến count để lưu số lượng phần tử trong mảng 
+        struct
+        {
+            char **key; // có lưu trữ nhiều key, mỗi key là 1 string 
+            // vd: ["key1","key2","key3"],
+            struct JsonValue *values;
+            size_t count; // có bao nhiêu cặp key Value
+        }object;
+        // 
+    } value; // value sử dụng union vì nó sẽ sử dung 1 trong những kiểu dữ liệu này tại 1 thời điểm.
+} JsonValue;
+
+```
+
+Continue, Mục tiêu là chúng ta sẽ có một chuỗi Json lớn được lưu trữ với trong biến có kiểu string. Và chúng ta sẽ phân tích thành từng element khác nhau với kiểu sử liệu khác nhau. 
+
+Để thực hiện được điều đó chúng ta phải viết các Fuction khác nhau để phân tay chúng từ kiểu Json 
+
+``` bash
+JsonValue *parse_json(const char **json);
+// nó sẽ cấp phát vùng nhớ và trả về địa chỉ chứa các object, và trong object đó sẽ chứa value với nhiều kiểu khác nhau chẳng hạn .
+
+// bản chất là nó sẽ thực hiện việc đệ quy nhiều lần cho tới hết chuỗi Json ban đầu
+static void skip_whitespace(const char **json);
+
+// bỏ qua khoảng trắng
+
+JsonValue *parse_null(const char **json);
+
+// địa chỉ của 1 key nào đó có value là kiểu NULL
+
+JsonValue *parse_boolean(const char **json);
+JsonValue *parse_number(const char **json);
+JsonValue *parse_string(const char **json);
+JsonValue *parse_array(const char **json);
+JsonValue  *parse_object(const char** json);
+
+// tương tự ta sẽ có được đỉa chỉ 1 object ban đầu là ta sử con trỏ để trỏ đén các cặp key value trong object đó
+
+ void free_json_value(JsonValue *json_value);
+
+ // truyền vào function này địa chỉ của biến biến giá trị của key value vừa tao, nghĩa là biến này là con trỏ có kiểu JsonValue và vừa được khởi tạo bằng malloc. 
+ // Tiếp theo nó Clear vùng nhớ vừa tạo 
+ // vd là mảng nó sẽ thu hồi vùng nhớ của các giá trị trong mảng đó  và thu hôi luôn cả vung nhớ của phần tử đầu tiên của mảng 
+```
+
+</details>
+
+## Bài  12: BINARY SEARCH - FILE OPENRATION - CODE CONVENTION
+
+
+### Binary Search
+
+ Thuật toán tìm kiếm nhị phân là một phương pháp tìm kiếm các phần tử trong một mảng đã được sắp xếp. Có thể là mảng sẽ được sắp xếp theo chiều từ nhỏ đến lớn hoặc từ lớn đến bé. Giải thuật này giúp tối ưu bộ nhớ của chương trình vì giảm số lần thực hiện so với phương pháp thông thường
+
+ Giả sử có 1000 phần tử với giải thuật thông thường sẽ trãi qua 1000 vòng lặp để tìm ra số phần từ, but with Binay Search chỉ mất 14 ỏ 15 vòng lặp for. 
+
+ Mô tả:
+#### Sắp xếp mảng: Đầu tiên mảng phải sắp xếp tăng dần hoặc giảm dần
+#### Ban đầu, ta tìm kiếm số 25
+![](/Image/8.png)
+#### Xác Định Lelf và Right và Mid 
+![](/Image/11.png)
+
+#### So sách giá trị cần tìm với giá trị tại Mid, lớn hơn bé or bằng 
+##### => trong trường hợp này tại Mid có value = 18 
+##### => value cần tìm lớn hơn value của Mid
+##### => Lelf lúc này sẽ = Mid + 1:
+
+![](/Image/12.png)
+
+#### Vậy là chúng ta đã giới hạn được các giá trị 
+
+![](/Image/13.png)
+
+#### Cuối cùng, chúng ta sẽ lại có Right Lelf và Mid mới khi chưa tìm thấy giá trị mong muốn 
+![](/Image/14.png)
+
+### Từ lý thuyết ta sẽ phát triển thành code 
+
+- Có 2 giải thuật cần quan tâm. 
+    - Một là giải thuật tìm kiếm giá trị. Điều đó có nghĩa ta sẽ cần truyền vào giá trị cần tìm kiếm và truyền vào địa chỉ của number list, left and right 
+
+    ``` bash
+    int binarySearch(int* arr, int l, int r, int x)
+    {
+        if (r >= l)
+        {
+            int mid = (r + l) / 2;
+
+    
+            if (arr[mid] == x)  return mid;
+
+    
+            if (arr[mid] > x) return binarySearch(arr, l, mid - 1, x);
+
+    
+            return binarySearch(arr, mid + 1, r, x);
+        }
+        return -1;
+    }
+    ```
+    -  Hai là giải thuật sắp xếp. Cái này khá đơn giản 
+
+    ``` bash
+    void swap(int* a, int* b)
+    {
+        int temp = *a;
+        *a = *b;
+        *b = temp;
+    }
+    
+    void bubbleSort(int arr[], int n)
+    {
+        int i, j;
+        for (i = 0; i < n - 1; i++)
+        {
+           
+            for (j = 0; j < n - i - 1; j++)
+            {
+               
+                if (arr[j] > arr[j + 1])
+                    swap(&arr[j], &arr[j + 1]);
+            }
+        }
+    }
+    
+    ```
+
