@@ -1242,6 +1242,7 @@ JsonValue  *parse_object(const char** json);
 
 ## Bài  12: BINARY SEARCH - FILE OPENRATION - CODE CONVENTION
 
+<details><summary>Chi tiết</summary>   
 
 ### Binary Search
 
@@ -1321,3 +1322,4 @@ JsonValue  *parse_object(const char** json);
     
     ```
 
+</details>
