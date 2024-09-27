@@ -8,6 +8,8 @@
         "system_error": "c",
         "algorithm": "c",
         "stdlib.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "ostream": "cpp",
+        "iostream": "cpp"
     }
 }
